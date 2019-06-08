@@ -534,7 +534,7 @@ void ConInput::Input()
 				input.push_back(ch);
 			}
 			this->OnValueChanged();
-
+			this->OnPushed(buf);
 		}
 	}
 
@@ -553,9 +553,13 @@ void ConInputTest::OnValueChanged()
 
 void ConInputTest::OnPushed(std::vector<wchar_t>& wchars)
 {
+	auto s = wchars;
+	s.push_back(0);
+	printf(" + [%ls]\n",  &s[0]);
 }
 
 void ConInputTest::OnPoped(wchar_t ch)
 {
+	printf(" + [%lc]\n", ch);
 }
 
