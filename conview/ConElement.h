@@ -91,9 +91,13 @@ public:
 };
 
 
-class ConInputLine: public ConInput, public ConView {
+class ConInputText: public ConInput, public ConTextView {
 	std::wstring label;
-
+	virtual void OnValueChanged() override;
+public:
+	ConInputText();
+	ConInputText(std::wstring & lable);
+	ConInputText(wchar_t* lable);
 };
 
 

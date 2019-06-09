@@ -5,14 +5,16 @@
 
 int main() {
 	setlocale(LC_ALL, "");
-	ConTextView e1;
-	///*e1.x = 10;
-	//e1.y = 4;
-	//e1.width = 8;
-	//e1.height = 6;*/
-	e1.SetArea(1, 1, 8, 8);
-	e1.SetText(std::wstring(L"一二\n一二三\n一二三四\n一二三s四\n一二三四wu\n"));
-	e1.Update();
+
+	//text view
+
+	//ConTextView e1;
+	//e1.SetArea(1, 1, 8, 8);
+	//e1.SetText(std::wstring(L"一二\n一二三\n一二三四\n一二三s四\n一二三四wu\n"));
+	//e1.Update();
+
+	//table view
+
 	//ConTableElement t1(5,5);
 	//t1.SetPosition(20, 4);
 	////t1.SetLayout({ 2, 1, 1 }, { 10, 10 });
@@ -22,9 +24,15 @@ int main() {
 	//t1.FitCells();
 	//t1.Update();
 
-	
+	//input base
 	/*ConInputTest it;
 	it.Input();*/
 
+	//input text view
+
+	ConInputText it;
+	it.SetArea(1, 1, 10, 4);
+	it.Update();
+	it.Input();
 	system("pause");
 }

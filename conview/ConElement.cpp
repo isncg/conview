@@ -228,13 +228,24 @@ std::wstring & ConTextView::SetText(std::wstring & text)
 		}
 		char* buf = new char[width] {0};
 		int len = WideCharToMultiByte(CP_ACP, 0, &line[0], line.size(), buf, width, 0, 0);
-		for (int col = 0; col < len; col++) {
+		int col = 0;
+		for (; col < len; col++) {
 			char_info_buffer[row*width + col].Char.AsciiChar = buf[col];
+		}
+		for (; col < width; col++) {
+			char_info_buffer[row*width + col].Char.AsciiChar = ' ';
 		}
 		delete buf;
 		row++;
 	}
 
+	while (row < height) {		
+		int col = 0;		
+		for (; col < width; col++) {
+			char_info_buffer[row*width + col].Char.AsciiChar = ' ';
+		}		
+		row++;
+	}
 
 
 	//while (reader < wtext_data.size() && writer < max_size)
@@ -762,3 +773,31 @@ void ConInputTest::OnPoped(wchar_t ch)
 	printf(" + [%lc]\n", ch);
 }
 
+void ConInputText::OnValueChanged()
+{
+	auto s = input;
+	s.push_back(0);
+	std::wstring ss(&s[0]);
+	this->SetText(label+ L": " + ss);
+	this->Update();
+}
+
+ConInputText::ConInputText()
+{
+	auto s = input;
+	s.push_back(0);
+	std::wstring ss(&s[0]);
+	this->SetText(label + L": " + ss);
+}
+
+ConInputText::ConInputText(std::wstring & lable)
+{
+	this->label = label;
+	ConInputText();
+}
+
+ConInputText::ConInputText(wchar_t * lable)
+{
+	this->label = std::wstring(label);
+	ConInputText();
+}
