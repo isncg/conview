@@ -23,40 +23,73 @@ void ConTextView::SetArea(int x, int y, int width, int height)
 {
 	ConView::SetArea(x, y, width, height);
 	int attr = DEFAULT_ATTR;
-	SetText(this->text_data);
+	SetText(this->wtext_data);
 	SetStyle(attr);
 
 }
 
-std::string & ConTextView::GetText()
+std::wstring & ConTextView::GetText()
 {
-	return this->text_data;
+	return this->wtext_data;
 	// TODO: 在此处插入 return 语句
 }
 
-std::string & ConTextView::SetText(std::string & text)
+//std::string & ConTextView::SetText(std::string & text)
+//{
+//	// TODO: 在此处插入 return 语句
+//	this->text_data = text;
+//	int max_size = width*height;
+//	if (!max_size) {
+//		return this->text_data;
+//	}
+//	int reader = 0;
+//	int writer = 0;
+//	auto char_info_buffer = (CHAR_INFO*)buffer;
+//	while (reader < text_data.size() && writer < max_size)
+//	{
+//		auto ch = text_data[reader];
+//		if ('\n' == ch) {
+//
+//		}
+//		char_info_buffer[writer].Char.AsciiChar = ch;
+//		reader++;
+//		writer++;
+//	}
+//	//this->Update();
+//	return this->text_data;
+//}
+
+std::wstring & ConTextView::SetText(std::wstring & text)
 {
 	// TODO: 在此处插入 return 语句
-	this->text_data = text;
+	this->wtext_data = text;
 	int max_size = width*height;
 	if (!max_size) {
-		return this->text_data;
+		return this->wtext_data;
 	}
 	int reader = 0;
 	int writer = 0;
 	auto char_info_buffer = (CHAR_INFO*)buffer;
-	while (reader < text_data.size() && writer < max_size)
+	while (reader < wtext_data.size() && writer < max_size)
 	{
-		auto ch = text_data[reader];
+		auto ch = wtext_data[reader];
 		if ('\n' == ch) {
 
 		}
-		char_info_buffer[writer].Char.AsciiChar = ch;
+
+
+		char_info_buffer[writer++].Char.UnicodeChar = ch;
+
 		reader++;
-		writer++;
+		//writer++;
 	}
+
+	while (writer < max_size) {
+		char_info_buffer[writer++].Char.UnicodeChar = ' ';
+	}
+
 	//this->Update();
-	return this->text_data;
+	return this->wtext_data;
 }
 
 void ConTextView::SetStyle(int style)
@@ -71,11 +104,11 @@ void ConTextView::SetStyle(int style)
 
 void ConTextView::FitRows(int row_count)
 {
-	int col = text_data.size() / row_count;
-	if (text_data.size() % row_count) {
+	int col = wtext_data.size() / row_count;
+	if (wtext_data.size() % row_count) {
 		col++;
 	}
-	SetArea(x, y, col, row_count);
+	SetArea(x, y, col<<1, row_count);
 }
 
 ConTextView::ConTextView()
@@ -83,15 +116,15 @@ ConTextView::ConTextView()
 
 }
 
-ConTextView::ConTextView(std::string & text)
+ConTextView::ConTextView(std::wstring & text)
 {
 	SetText(text);
 	FitRows(1);
 }
 
-ConTextView::ConTextView(char * text)
+ConTextView::ConTextView(wchar_t * text)
 {
-	SetText(std::string(text));
+	SetText(std::wstring(text));
 	FitRows(1);
 }
 
@@ -135,7 +168,7 @@ void ConView::Update()
 			return;
 		}
 
-		auto r = WriteConsoleOutput(
+		auto r = WriteConsoleOutputW(
 			hStdout, // screen buffer to write to 
 			(CHAR_INFO*)buffer,      // buffer to copy from 
 			coordBufSize,     // col-row size of chiBuffer 
@@ -161,7 +194,7 @@ void ConView::InitBuffer(int width, int height)
 	auto _buffer = new CHAR_INFO[bufsize];
 	this->buffer = _buffer;
 	//ZeroMemory(this->buffer, sizeof(CHAR_INFO)*bufsize);
-	CHAR_INFO empty{ 0, DEFAULT_ATTR };
+	CHAR_INFO empty{ ' ', DEFAULT_ATTR };
 
 	for (int i = 0; i < bufsize; i++) {
 		_buffer[i] = empty;
@@ -555,7 +588,7 @@ void ConInputTest::OnPushed(std::vector<wchar_t>& wchars)
 {
 	auto s = wchars;
 	s.push_back(0);
-	printf(" + [%ls]\n",  &s[0]);
+	printf(" + [%ls]\n", &s[0]);
 }
 
 void ConInputTest::OnPoped(wchar_t ch)

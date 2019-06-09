@@ -30,19 +30,21 @@ public:
 
 class ConTextView : public ConView
 {
-	std::string text_data;
+	//std::string text_data;
+	std::wstring wtext_data;
 public:
 
 	virtual void SetArea(int x, int y, int width, int height) override;
-	std::string & GetText();
-	std::string & SetText(std::string& text);
+	std::wstring & GetText();
+	//std::string & SetText(std::string& text);
+	std::wstring & SetText(std::wstring& text);
 	void SetStyle(int style);
 	void FitRows(int row_count);
 	void FitColumns(int col_count);
 
 	ConTextView();
-	ConTextView(std::string& text);
-	ConTextView(char* text);
+	ConTextView(std::wstring& text);
+	ConTextView(wchar_t* text);
 	~ConTextView();
 };
 
@@ -86,6 +88,12 @@ public:
 
 	void Input();
 	//void UnBind();
+};
+
+
+class ConInputLine: public ConInput, public ConView {
+	std::wstring label;
+
 };
 
 
